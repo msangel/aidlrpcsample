@@ -9,16 +9,22 @@ import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.Timer;
+import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+
+import rx.Emitter;
 
 import static android.os.Process.myPid;
 
 public class MyService extends Service {
 
     public RemoteCallbackList<EventListeners> list = new RemoteCallbackList<>();
+
+
+
 
     IWindscribeInterface.Stub binder = new IWindscribeInterface.Stub() {
 
@@ -50,6 +56,23 @@ public class MyService extends Service {
         public void unregisterListener(EventListeners l) throws RemoteException {
             list.unregister(l);
         }
+
+        @Override
+        public void acceptEmitter(final AIDLEmitter emitter, final String param) throws RemoteException {
+            emitter.onNext(new Event("My Emitter starts"));
+            Executors.newSingleThreadScheduledExecutor().schedule(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        emitter.onNext(new Event("My emitter ends after calculating: "+param));
+                        emitter.onComplete();
+                    } catch (RemoteException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }, 15, TimeUnit.SECONDS);
+        }
+
     };
 
     @Override

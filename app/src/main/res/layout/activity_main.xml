@@ -38,4 +38,17 @@
         android:layout_alignParentStart="true"
         android:onClick="bindIt"
         style="@android:style/Widget.Holo.Button" />
+
+    <Button
+        android:text="Get Emitter"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/button3"
+        android:onClick="getEmiter"
+        android:layout_below="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        style="@android:style/Widget.Holo.Button"
+        android:layout_alignRight="@+id/button2"
+        android:layout_alignEnd="@+id/button2" />
 </RelativeLayout>
